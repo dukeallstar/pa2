@@ -1,0 +1,12 @@
+python:
+	cd python;\
+	python test.py
+
+
+cpp:
+	cd cpp;\
+	g++ -lgtest pa2_unittest.cc -o ../tests_cpp
+	./tests_cpp
+
+clean:
+	rm -f tests_cpp
