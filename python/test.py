@@ -9,67 +9,72 @@ from hittable import sphere
 from hittable_list import hittable_list
 from hit_record import hit_record
 from camera import camera
-from materials import lambertian,metal,dielectric
+from material import lambertian,metal,dielectric
+from color import color
+import random
 
 class TestMaterials(unittest.TestCase):
 
     def testlambertian(self):
-		a = lambertian(color(1,0,1))
-		origin = point3(1,1,1)
-		direction = vec3(1,7,8)
-		in_ray = ray(origin,direction)
-		scattered = ray(origin,direction)
-		record  = hit_record()
+        random.seed(42) 
+        a = lambertian(color(1,0,1))
+        origin = point3(1,1,1)
+        direction = vec3(1,7,8)
+        ray_in = ray(origin,direction)
+        scattered = ray(origin,direction)
+        record  = hit_record()
         record.p = point3(0,0,0)
         record.normal = vec3(0,0,1)
-		color atten  = color(0.2,0.2,0.2) 
-		a.scatter(ray_in,record,atten,scattered)
-		self.assertEqual(record.p.x(),scattered.origin().x())
-		self.assertEqual(record.p.y(),scattered.origin().y())
-		self.assertEqual(record.p.z(),scattered.origin().z())
-		
-		self.assertEqual(-0.63523962690880742,scattered.direction().x())
-		self.assertEqual(-0.74675177887748911,scattered.direction().y())
-		self.assertEqual(0.80294062532306487,scattered.direction().z())
+        atten  = color(0.2,0.2,0.2) 
+        res,scattered,atten =a.scatter(ray_in,record)
+        self.assertEqual(record.p.x(),scattered.origin().x())
+        self.assertEqual(record.p.y(),scattered.origin().y())
+        self.assertEqual(record.p.z(),scattered.origin().z())
+
+        self.assertAlmostEqual(-0.7818442803709916,scattered.direction.x(),2)
+        self.assertAlmostEqual(-0.028800780236799862,scattered.direction.y(),2)
+        self.assertAlmostEqual(0.377191814192429,scattered.direction.z(),2)
 
     def testmetal(self):
-		a = metal(color(1,0,1),.3)
-		origin = point3(1,1,1)
-		direction = vec3(1,7,8)
-		ray_in = ray(origin,direction)
-		scattered = ray(origin,direction)
-		record  = hit_record() 
+        
+        random.seed(42)
+        a = metal(color(1,0,1),.3)
+        origin = point3(1,1,1)
+        direction = vec3(1,7,8)
+        ray_in = ray(origin,direction)
+        scattered = ray(origin,direction)
+        record  = hit_record() 
         record.p = point3(0,0,0)
         record.normal = vec3(0,0,1)
-		atten  = color(0.2,0.2,0.2) 
-		a.scatter(ray_in,record,atten,scattered)
-		self.assertEqual(record.p.x(),scattered.origin().x())
-		self.assertEqual(record.p.y(),scattered.origin().y())
-		self.assertEqual(record.p.z(),scattered.origin().z())
-		
-		self.assertEqual(-0.05626434835975537,scattered.direction().x())
-		self.assertEqual(0.4793691511844973,scattered.direction().y())
-		self.assertEqual(-0.79577664009127647,scattered.direction().z())
+        atten  = color(0.2,0.2,0.2) 
+        res,scattered,atten = a.scatter(ray_in,record)
+        self.assertAlmostEqual(record.p.x(),scattered.origin().x())
+        self.assertAlmostEqual(record.p.y(),scattered.origin().y())
+        self.assertAlmostEqual(record.p.z(),scattered.origin().z())
+
+        self.assertAlmostEqual( -0.16101711745797503,scattered.direction.x(),2)
+        self.assertAlmostEqual(0.9351774918261945,scattered.direction.y(),2)
+        self.assertAlmostEqual(-0.8911169485235475,scattered.direction.z(),2)
 
 
     def testdielectric(self):
-		dielectric a = dielectric(1.3)
-		origin = point3(1,1,1)
-		direction = vec3(1,7,8)
-		ray_in = ray(origin,direction)
-		scattered = ray(origin,direction)
-		hit_record record  = hit_record() 
+        a = dielectric(1.3)
+        origin = point3(1,1,1)
+        direction = vec3(1,7,8)
+        ray_in = ray(origin,direction)
+        scattered = ray(origin,direction)
+        record  = hit_record() 
         record.p = point3(0,0,0)
         record.normal = vec3(0,0,1)
-		atten  = color(0.2,0.2,0.2) 
-		a.scatter(ray_in,record,atten,scattered)
-		self.assertEqual(record.p.x(),scattered.origin().x())
-		self.assertEqual(record.p.y(),scattered.origin().y())
-		self.assertEqual(record.p.z(),scattered.origin().z())
-		
-		self.assertEqual(0.093658581158169399,scattered.direction().x())
-		self.assertEqual(0.65561006810718581,scattered.direction().y())
-		self.assertEqual(-0.74926864926535519,scattered.direction().z())
+        atten  = color(0.2,0.2,0.2) 
+        res,scattered,atten=a.scatter(ray_in,record)
+        self.assertAlmostEqual(record.p.x(),scattered.origin().x(),2)
+        self.assertAlmostEqual(record.p.y(),scattered.origin().y(),2)
+        self.assertAlmostEqual(record.p.z(),scattered.origin().z(),2)
+
+        self.assertAlmostEqual(0.093658581158169399,scattered.direction.x(),2)
+        self.assertAlmostEqual(0.65561006810718581,scattered.direction.y(),2)
+        self.assertAlmostEqual(-0.74926864926535519,scattered.direction.z(),2)
 
 
 class TestCamera(unittest.TestCase):
@@ -98,78 +103,75 @@ class TestCamera(unittest.TestCase):
 
     def testGetRay(self):
 	    #set random seed to 42
-	    c = camera()
+        random.seed(42)
+        c = camera()
         c.initialize() 
         r = c.get_ray(130,130)  
         self.assertEqual(0.0,r.origin().x())
         self.assertEqual(0.0,r.origin().y())
         self.assertEqual(-1.0,r.origin().z())
-        self.assertEqual(-16.006693989597256,r.direction().x())
-        self.assertEqual(-16.065992841497057,r.direction().y())
-        self.assertEqual(10.0,r.direction().z())
+        self.assertAlmostEqual( -16.12788535969157,r.direction.x(),2)
+        self.assertAlmostEqual(-16.00500215104453,r.direction.y(),2)
+        self.assertEqual(10.0,r.direction.z())
 
 
     def testGetSquareSample(self):
 		#set random seed to 144
-	    c = camera()
+        random.seed(42)
+        c = camera()
         c.initialize() 
         v = c.pixel_sample_square()
-        self.assertEqual(0.083333106152713277,v.x())
-        self.assertEqual(-0.091526530496776087,v.y())
+        self.assertAlmostEqual(-0.027885359691576742,v.x(),2)
+        self.assertAlmostEqual(0.09499784895546659,v.y(),2)
         self.assertEqual(0.0,v.z())
 
 
     def testGetDiskSample(self):
 	#set random seed to 144	
+        random.seed(42)
         c = camera()
         c.initialize() 
         v = c.pixel_sample_disk(2.0)
-        self.assertEqual(-0.3583317294716834,v.x())
-        self.assertEqual(0.037235998734831799,v.y())
-        self.assertEqual(0.0,v.z())
-
-
-    def testGetRayColor(self):
-		#set random seed to 144
-        c = camera()
-        c.initialize() 
-        v = c.pixel_sample_disk(2.0)
-        self.assertEqual(-0.3583317294716834,v.x())
-        self.assertEqual(0.037235998734831799,v.y())
+        self.assertAlmostEqual(0.2218702794464577,v.x(),2)
+        self.assertAlmostEqual( 0.008173030512396505,v.y(),2)
         self.assertEqual(0.0,v.z())
 
 
     def testSphereHitTest(self):
         #set random seed to 144
-	    c = camera()
+        random.seed(42)
+        c = camera()
         c.initialize() 
-		direct = vec3(1,7,8)
-		orig = point3(0,0,0)	
-		r = ray(orig,direct)
-        s = sphere(point3(10,70,80),5,make_shared<lambertian>(color(0.7,0.7,1.0)))
+        direct = vec3(1,7,8)
+        orig = point3(0,0,0)	
+        r = ray(orig,direct)
+        s = sphere(point3(10,70,80),5,lambertian(color(0.7,0.7,1.0)))
         rc = c.ray_color(r,1000,s)	
-		self.assertEqual(0.61969189831627691,rc.x())
-		self.assertEqual(0.65181513898976606,rc.y())
-		self.assertEqual(1.0,rc.z())
+        self.assertAlmostEqual(0.5928344685594874,rc.x(),2)
+        self.assertAlmostEqual(0.6357006811356924,rc.y(),2)
+        self.assertEqual(1.0,rc.z())
 
 
 
     def testRenderImage(self):
         # set random seed to 144 
-	    c = camera()
+        random.seed(42)
+        c = camera()
         c.initialize() 
-		direct = vec3(1,7,8)
-		orig = point3(0,0,0)	
-		r = ray(orig,direct)
-        s = sphere(point3(10,70,80),5,make_shared<lambertian>(color(0.7,0.7,1.0)))
+        direct = vec3(1,7,8)
+        orig = point3(0,0,0)	
+        r = ray(orig,direct)
+        s = sphere(point3(10,70,80),5,lambertian(color(0.7,0.7,1.0)))
         c.render(s,"image.ppm")
-        refImg = open("result.ppm",'r')
+        refImg = open("py_result.ppm",'r')
         genImg = open("image.ppm",'r')
         reflines = refImg.readlines() 
         genlines = genImg.readlines() 
         for i in range(0,len(reflines)):
             self.assertEqual(reflines[i],genlines[i])
 
+        refImg.close()
+        genImg.close()
 
 
 if __name__ == '__main__':

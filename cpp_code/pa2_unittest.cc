@@ -26,13 +26,13 @@ namespace {
     record.normal = vec3(0,0,1);
 		color atten  = color(0.2,0.2,0.2); 
 		a.scatter(in,record,atten,scattered);
-		EXPECT_EQ(record.p.x(),scattered.origin().x());
-		EXPECT_EQ(record.p.y(),scattered.origin().y());
-		EXPECT_EQ(record.p.z(),scattered.origin().z());
+		EXPECT_DOUBLE_EQ(record.p.x(),scattered.origin().x());
+		EXPECT_DOUBLE_EQ(record.p.y(),scattered.origin().y());
+		EXPECT_DOUBLE_EQ(record.p.z(),scattered.origin().z());
 		
-		EXPECT_EQ(-0.63523962690880742,scattered.direction().x());
-		EXPECT_EQ(-0.74675177887748911,scattered.direction().y());
-		EXPECT_EQ(0.80294062532306487,scattered.direction().z());
+		EXPECT_DOUBLE_EQ(-0.63523962690880742,scattered.direction().x());
+		EXPECT_DOUBLE_EQ(-0.74675177887748911,scattered.direction().y());
+		EXPECT_DOUBLE_EQ(0.80294062532306487,scattered.direction().z());
 	}
 
 	TEST(Onec,Metal){
@@ -51,9 +51,9 @@ namespace {
 		EXPECT_EQ(record.p.y(),scattered.origin().y());
 		EXPECT_EQ(record.p.z(),scattered.origin().z());
 		
-		EXPECT_EQ(-0.05626434835975537,scattered.direction().x());
-		EXPECT_EQ(0.4793691511844973,scattered.direction().y());
-		EXPECT_EQ(-0.79577664009127647,scattered.direction().z());
+		EXPECT_DOUBLE_EQ(-0.05626434835975537,scattered.direction().x());
+		EXPECT_DOUBLE_EQ(0.4793691511844973,scattered.direction().y());
+		EXPECT_DOUBLE_EQ(-0.79577664009127647,scattered.direction().z());
 	}
 
 
@@ -73,9 +73,9 @@ namespace {
 		EXPECT_EQ(record.p.y(),scattered.origin().y());
 		EXPECT_EQ(record.p.z(),scattered.origin().z());
 		
-		EXPECT_EQ(0.093658581158169399,scattered.direction().x());
-		EXPECT_EQ(0.65561006810718581,scattered.direction().y());
-		EXPECT_EQ(-0.74926864926535519,scattered.direction().z());
+		EXPECT_DOUBLE_EQ(0.093658581158169399,scattered.direction().x());
+		EXPECT_DOUBLE_EQ(0.65561006810718581,scattered.direction().y());
+		EXPECT_DOUBLE_EQ(-0.74926864926535519,scattered.direction().z());
 	}
 
 
@@ -83,22 +83,22 @@ namespace {
 		srand(42);
 	 camera c = camera();
     c.initialize(); 
-    EXPECT_EQ(1.0,c.aspect_ratio);
-    EXPECT_EQ(100,c.image_width);
-    EXPECT_EQ(10,c.samples_per_pixel);
-    EXPECT_EQ(10,c.max_depth);
-    EXPECT_EQ(90,c.vfov);
-    EXPECT_EQ(0,c.defocus_angle);
-    EXPECT_EQ(10,c.focus_dist);
-    EXPECT_EQ(point3(0,0,-1).x(),c.lookfrom.x());
-    EXPECT_EQ(point3(0,0,-1).y(),c.lookfrom.y());
-    EXPECT_EQ(point3(0,0,-1).z(),c.lookfrom.z());
-    EXPECT_EQ(point3(0,0,0).x(),c.lookat.x());
-    EXPECT_EQ(point3(0,0,0).y(),c.lookat.y());
-    EXPECT_EQ(point3(0,0,0).z(),c.lookat.z());
-    EXPECT_EQ(point3(0,1,0).x(),c.vup.x());
-    EXPECT_EQ(point3(0,1,0).y(),c.vup.y());
-    EXPECT_EQ(point3(0,1,0).z(),c.vup.z());
+    EXPECT_DOUBLE_EQ(1.0,c.aspect_ratio);
+    EXPECT_DOUBLE_EQ(100,c.image_width);
+    EXPECT_DOUBLE_EQ(10,c.samples_per_pixel);
+    EXPECT_DOUBLE_EQ(10,c.max_depth);
+    EXPECT_DOUBLE_EQ(90,c.vfov);
+    EXPECT_DOUBLE_EQ(0,c.defocus_angle);
+    EXPECT_DOUBLE_EQ(10,c.focus_dist);
+    EXPECT_DOUBLE_EQ(point3(0,0,-1).x(),c.lookfrom.x());
+    EXPECT_DOUBLE_EQ(point3(0,0,-1).y(),c.lookfrom.y());
+    EXPECT_DOUBLE_EQ(point3(0,0,-1).z(),c.lookfrom.z());
+    EXPECT_DOUBLE_EQ(point3(0,0,0).x(),c.lookat.x());
+    EXPECT_DOUBLE_EQ(point3(0,0,0).y(),c.lookat.y());
+    EXPECT_DOUBLE_EQ(point3(0,0,0).z(),c.lookat.z());
+    EXPECT_DOUBLE_EQ(point3(0,1,0).x(),c.vup.x());
+    EXPECT_DOUBLE_EQ(point3(0,1,0).y(),c.vup.y());
+    EXPECT_DOUBLE_EQ(point3(0,1,0).z(),c.vup.z());
 	}
 
 
@@ -107,12 +107,12 @@ namespace {
 	 camera c = camera();
     c.initialize(); 
     ray r = c.get_ray(130,130);  
-    EXPECT_EQ(0.0,r.origin().x());
-    EXPECT_EQ(0.0,r.origin().y());
-    EXPECT_EQ(-1.0,r.origin().z());
-    EXPECT_EQ(-16.006693989597256,r.direction().x());
-    EXPECT_EQ(-16.065992841497057,r.direction().y());
-    EXPECT_EQ(10.0,r.direction().z());
+    EXPECT_DOUBLE_EQ(0.0,r.origin().x());
+    EXPECT_DOUBLE_EQ(0.0,r.origin().y());
+    EXPECT_DOUBLE_EQ(-1.0,r.origin().z());
+    EXPECT_DOUBLE_EQ(-16.006693989597256,r.direction().x());
+    EXPECT_DOUBLE_EQ(-16.065992841497057,r.direction().y());
+    EXPECT_DOUBLE_EQ(10.0,r.direction().z());
 	}
 
 
@@ -121,23 +121,12 @@ namespace {
 	 camera c = camera();
     c.initialize(); 
     vec3 v = c.pixel_sample_square();
-    EXPECT_EQ(0.083333106152713277,v.x());
-    EXPECT_EQ(-0.091526530496776087,v.y());
-    EXPECT_EQ(0.0,v.z());
+    EXPECT_DOUBLE_EQ(0.083333106152713277,v.x());
+    EXPECT_DOUBLE_EQ(-0.091526530496776087,v.y());
+    EXPECT_DOUBLE_EQ(0.0,v.z());
 	}
 
 	TEST(Twoe,GetDiskSample){
-		srand(144);
-	 camera c = camera();
-    c.initialize(); 
-    vec3 v = c.pixel_sample_disk(2.0);
-    EXPECT_EQ(-0.3583317294716834,v.x());
-    EXPECT_EQ(0.037235998734831799,v.y());
-    EXPECT_EQ(0.0,v.z());
-	}
-
-
-	TEST(Twof,GetRayColor){
 		srand(144);
 	 camera c = camera();
     c.initialize(); 
@@ -146,6 +135,7 @@ namespace {
     EXPECT_DOUBLE_EQ(0.037235998734831799,v.y());
     EXPECT_DOUBLE_EQ(0.0,v.z());
 	}
+
 
 
 	TEST(SphereHitTest,Hit){
@@ -185,7 +175,7 @@ std::cout.rdbuf(buffer.rdbuf());
     std::string image_string = buffer.str();
   std::cout << image_string;
 std::ifstream t;
-  t.open("result.txt");
+  t.open("result.ppm");
 std::stringstream buffer2;
 buffer2 << t.rdbuf();
   std::string ref_image = buffer2.str();
