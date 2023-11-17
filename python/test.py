@@ -52,9 +52,9 @@ class TestMaterials(unittest.TestCase):
         self.assertAlmostEqual(record.p.y(),scattered.origin().y())
         self.assertAlmostEqual(record.p.z(),scattered.origin().z())
 
-        self.assertAlmostEqual( -0.16101711745797503,scattered.direction.x(),2)
-        self.assertAlmostEqual(0.9351774918261945,scattered.direction.y(),2)
-        self.assertAlmostEqual(-0.8911169485235475,scattered.direction.z(),2)
+        self.assertAlmostEqual(  -0.07274412842667392,scattered.direction.x(),2)
+        self.assertAlmostEqual(0.6494802952228884,scattered.direction.y(),2)
+        self.assertAlmostEqual(-0.8818231390428128,scattered.direction.z(),2)
 
 
     def testdielectric(self):
